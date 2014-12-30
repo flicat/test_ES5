@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Object</title>
+</head>
+<body>
+<script type="text/javascript">
+    var log = function() {
+        console.log.apply(console, arguments);
+    };
+    var dir = function() {
+        console.dir.apply(console, arguments);
+    };
+
+    // Object.keys 与 Object.getOwnPropertyNames 方法： 遍历对象的属性
+    (function() {
+        var o = {
+            p1: 'a',
+            f1: function() {
+                return this;
+            }
+        };
+
+//        log(Object.keys(o));                      // ["p1", "f1"]
+//        log(Object.getOwnPropertyNames(o));       // ["p1", "f1"]
+
+        var arr = [1, 2, 'hello'];
+
+//        log(Object.keys(arr));                     // ["0", "1", "2"]
+//        log(Object.getOwnPropertyNames(arr));      // ["0", "1", "2", "length"]
+
+        var str = function() { return false };
+
+//        log(Object.keys(str));                     //  []
+//        log(Object.getOwnPropertyNames(str));      // ["length", "name", "arguments", "caller", "prototype"]
+    })();
+
+    // Object.observe方法用于观察对象属性的变化。
+    (function() {
+        var o = {};
+        var arr = [];
+
+        Object.observe(o, function(changes) {
+//            log(changes);
+            changes.forEach(function(change) {
+                log(change.type, change.name, change.oldValue);
+            });
+        });
+
+//        o.bar = 123;            // add bar undefined
+//        o.bar = 'aaa';          // update bar 123
+//        delete o.bar;           // delete bar aaa
+
+
+        Object.observe(arr, function(changes) {
+            changes.forEach(function(change) {
+                log(change.type, change.name, change.oldValue);
+            });
+        });
+
+//        arr.push(123);        // add 0 undefined   update length 0
+//        arr[0] = 456;         // update 0 123
+//        arr.pop();            // delete 0 456      update length 1
+    })();
+
+
+    // 用toString判断数据类型
+    (function() {
+        var toString = function(o) {
+            return Object.prototype.toString.call(o);
+        };
+        var type = function(o) {
+            return toString(o).match(/\[object (.*?)\]/)[1].toLowerCase();
+        };
+        ['Null',
+            'Undefined',
+            'Object',
+            'Array',
+            'String',
+            'Number',
+            'Boolean',
+            'Function',
+            'RegExp',
+            'Element',
+            'NaN',
+            'Infinite'
+        ].forEach(function (t) {
+                    type['is' + t] = function (o) {
+                        return type(o) === t.toLowerCase();
+                    };
+                });
+
+
+        var MyObj = function() {};
+
+//        log(type({}));               // object
+//        log(type([]));               // array
+//        log(type(123));              // number
+//        log(type('aaa'));            // string
+//        log(type(false));            // boolean
+//        log(type(new MyObj()));      // object
+//        log(type(null));             // null
+//        log(type(undefined));        // undefined
+//        log(type(Math));             // math
+//
+//        log(type.isNumber(123));     // true
+//        log(type.isBoolean(1));     // false
+
+    })();
+
+    // 读取attributes对象
+    (function() {
+        var o = {
+            p: 123
+        };
+
+//        dir(Object.getOwnPropertyDescriptor(o, 'p'));
+        // configurable: true            表示“可配置性”，默认为true
+        // enumerable: true              表示该属性是否可枚举，默认为true
+        // value: 123                    表示该属性的值，默认为undefined。
+        // writable: true                表示该属性的值（value）是否可改变，默认为true。
+        // get：表示该属性的取值函数（getter），默认为undefined。
+        // set：表示该属性的存值函数（setter），默认为undefined。
+
+    })();
+
+    // Object.defineProperty 与 Object.defineProperties 定义或修改一个属性，然后返回修改后的对象
+    (function() {
+        var o = {};
+        var o1 = Object.defineProperty(o, 'p', {
+            writable: false,
+            value: 123
+        });
+
+//        log(o1.p);      // 123
+//        o1.p = 456;
+//        log(o1.p);      // 123
+//        log(o === o1);    // true
+
+        var o2 = Object.defineProperties({
+            p1: 123,
+            p2: 'ccc'
+        }, {
+            p2: {
+                get: function() {
+                    return this.p1 + 'aaa';
+                },
+                set: function(val) {
+                    return 'bbb';
+                }
+            }
+        });
+
+//        log(o2.p2);       // 123aaa
+//        o2.p2 = 456;
+//        log(o2.p2);       // 123aaa
+
+        var a1 = Object.defineProperties([], {
+            0: {
+                get: function() {
+                    log(this.length);
+                    return 0;
+                },
+                set: function(val) {
+                    log(this.length);
+                }
+            }
+        });
+
+//        a1[0] = 100;          // 1
+//        log(a1[0]);           // 1
+//        a1.pop();
+
+
+    })();
+
+    // 可枚举性
+    (function() {
+        var o = {
+            p1: 123,
+            p2: 456,
+            p3: 'aaa'
+        };
+        Object.defineProperty(o, 'p3', {
+            enumerable: false      // 不可枚举
+        });
+
+//        log(Object.keys(o));                    // ["p1", "p2"]
+//        log(Object.getOwnPropertyNames(o));     // ["p1", "p2", "p3"]
+//        log(Object.getOwnPropertyNames(String.prototype));     // ...
+
+        // 对象属性是否可枚举
+//        log(o.propertyIsEnumerable('p2'));      // true
+//        log(o.propertyIsEnumerable('p3'));      // false
+
+    })();
+
+
+    // 可配置性
+    (function() {
+        var o = {};
+
+        Object.defineProperty(o, 'p', {
+            value: 123,
+            writable: false,
+            enumerable: false,
+            configurable: false
+        });
+
+//        Object.defineProperty(o, 'p', {value: 'aaa'});        // TypeError: Cannot redefine property: p
+//        Object.defineProperty(o, 'p', {writable: true});      // Cannot redefine property: p
+//        Object.defineProperty(o, 'p', {enumerable: true});      // Cannot redefine property: p
+//        Object.defineProperty(o, 'p', {configurable: true});      // Cannot redefine property: p
+
+//        delete o.p;               // 不可删除
+//        log(o.p);                 // 123
+    })();
+
+    // 可写性
+    (function() {
+        var o = {};
+        Object.defineProperty(o, 'p', {
+            value: 123,
+            writable: false
+        });
+
+//        log(o.p);            // 123
+//        o.p = 456;
+//        log(o.p);            // 123
+
+        // 派生对象将无法自定义这个属性
+        var o2 = Object.create(o);
+//        log(o2.p);        // 123
+//        o2.p = 456;
+//        log(o2.p);        // 123
+
+        // 通过覆盖attributes对象，绕过这个限制，原型链会被完全忽视
+        Object.defineProperty(o2, 'p', {
+            value: 456
+        });
+//        log(o2.p);          // 456
+//        o2.p = 789;
+//        log(o2.p);          // 456
+
+    })();
+
+
+    // 存取函数（accessor）
+    (function() {
+        var o = {
+            get p() {
+                return 'getter'
+            },
+            set p(val) {
+                log('setter: ' + val);
+            }
+        };
+
+//        log(o.p);          // getter
+//        o.p = 123;         // setter: 123
+
+        var o2 = {
+            n: 5,
+            get next() {
+                return this.n++;
+            },
+            set next(val) {
+                if(val > this.n){
+                    this.n = val;
+                } else {
+                    throw "必须大于原来的值！";
+                }
+            }
+        };
+
+//        log(o2.next);           // 5
+//        log(o2.next);           // 6
+//        o2.next = 10;
+//        o2.next = 1;            // Uncaught 必须大于原来的值！
+
+        // 存取函数也可以使用Object.create方法定义
+        var o3 = Object.create(Object.prototype, {
+            foo: {
+                get: function() {
+                    return 'getter'
+                },
+                set: function(val) {
+                    log('setter: ' + val)
+                }
+            }
+        });
+
+//        log(o3.foo);            // getter
+//        o3.foo = 'asd';         // setter: asd
+    })();
+
+
+    (function() {
+        var o = {
+            bar: 123,
+            foo: function() {}
+        };
+
+        // Object.isExtensible方法用于检查一个对象是否使用了preventExtensions方法
+//        log(Object.isExtensible(o));             // true
+
+        // Object.preventExtensions方法可以使得一个对象无法再添加新的属性
+        Object.preventExtensions(o);
+
+//        log(Object.isExtensible(o));             // false
+
+//        Object.defineProperty(o, 'p', {value: 456});    // TypeError: Cannot define property:p, object is not extensible.
+//        o.p = 456;
+//        log(o.p);       // undefined
+
+//        log(o.bar);      // 123
+        // 可以删除现有的属性
+//        delete o.bar;
+//        log(o.bar);      // undefined
+
+        var o2 = {
+            p: 132
+        };
+
+//        log(Object.getOwnPropertyDescriptor(o2, 'p'));     // Object {value: 132, writable: true, enumerable: true, configurable: true}
+
+        // Object.seal方法使得一个对象既无法添加新属性，也无法删除旧属性，还把现有属性的attributes对象的configurable属性设为false。
+        Object.seal(o2);
+
+//        log(Object.getOwnPropertyDescriptor(o2, 'p'));     // Object {value: 132, writable: true, enumerable: true, configurable: false}
+
+
+//        o2.foo = 456;
+//        log(o2.foo);       // undefined
+
+//        delete o2.p;
+//        log(o2.p);           // 132
+
+//        Object.defineProperty(o, 'p', { enumerable: false });      // TypeError: Cannot define property:p, object is not extensible.
+
+
+        var o3 = Object.defineProperty({}, 'p', {writable: false});
+        Object.seal(o3);
+//        Object.defineProperty(o3, 'p', {writable: true});       // TypeError: Cannot redefine property: p
+
+        var o4 = Object.defineProperty({}, 'p', {writable: true});
+        Object.seal(o4);
+//        Object.defineProperty(o3, 'p', {writable: false});       // 不报错
+
+        // Object.isSealed方法用于检查一个对象是否使用了Object.seal方法。
+//        log(Object.isSealed(o));               // false
+//        log(Object.isSealed(o4));              // true
+//        log(Object.isExtensible(o));           // false
+
+        var o5 = {
+            p: 456
+        };
+        // Object.freeze方法可以使得一个对象无法添加新属性、无法删除旧属性、也无法改变属性的值，使得这个对象实际上变成了常量。
+        Object.freeze(o5);
+//        o5.foo = 123;
+//        log(o5.foo);        // undefined
+//        delete o5.p;
+//        log(o5.p);            // 456
+
+        // Object.isFrozen方法用于检查一个对象是否使用了Object.freeze()方法。
+//        log(Object.isFrozen(o));     // false
+//        log(Object.isFrozen(o5));    // true
+
+    })();
+
+    (function() {
+        var o = new Object();
+
+        Object.preventExtensions(o);
+        o.t = 'hello';
+//        log(o.t);       // undefined
+
+        // Object.getPrototypeOf() 方法返回指定对象的原型
+        var proto = Object.getPrototypeOf(o);
+        proto.t = "world";
+
+//        log(o.t);       // world
+
+        var o2 = Object.seal(
+                Object.create(Object.freeze({x:1}),
+                        {y: {value: 2, writable: true}})
+        );
+
+        o2.hello = 'hello';
+        Object.getPrototypeOf(o2).t = "world";
+//        log(o2.hello);          // undefined
+
+    })()
+
+</script>
+</body>
+</html>
