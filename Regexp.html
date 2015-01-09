@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Regexp</title>
+</head>
+<body>
+<script type="text/javascript">
+    var log = function() {
+        console.log.apply(console, arguments);
+    };
+
+    (function() {
+        var str = 'sjdfkncvkdshiuehvnxlkvnkcxv';
+        var reg = /h/g;
+
+//        log(reg.lastIndex);              // 0
+//        log(reg.test(str));              // true
+//        log(reg.lastIndex);              // 12
+//        log(reg.test(str));              // true
+//        log(reg.lastIndex);              // 16
+//        log(reg.test(str));              // false
+
+//        log(str.match(reg));             // ["h", "h"]
+//        log(reg.exec(str));              // ["h"]
+
+//        log(str.match(/h/));             // ["h"]
+    })();
+
+    (function() {
+        var str = 'aaa**a*';
+
+//        log(str.split('*'));         // ["aaa", "", "a", ""]
+
+        // 如果正则表达式带有括号，则括号匹配的部分也会作为数组成员返回。
+//        log(str.split(/a+/));        // ["", "**", "*"]
+//        log(str.split(/(a+)/));      // ["", "aaa", "**", "a", "*"]
+
+//        log(/a-z/.test("b"));           // false
+//        log(/[a-z]/.test("b"));         // true
+
+        var str2 = 'abcfbh';
+
+        // 使用组匹配时，不宜同时使用g修饰符，否则match方法不会捕获分组的内容。
+//        log(str2.match(/(.)b(.)/));           // ["abc", "a", "c"]
+//        log(str2.match(/(.)b(.)/g));          //  ["abc", "fbh"]
+
+        // (?:x)称为非捕获组（Non-capturing group），表示不返回该组匹配的内容，即匹配的结果中不计入这个括号。
+        log("hello world".match(/(?:.+)ll(\w)/));        // ["hello", "o"]
+
+        // x(?=y)称为先行断言（Positive look-ahead），x只有在y前面才匹配，y不会被计入返回结果。
+        log('abcfbghbk'.match(/b(?=c)/g));                   // ["b"]
+
+        // x(?!y)称为后行断言（Negative look-ahead），x只有不在y前面才匹配，y不会被计入返回结果。
+        log('abcfbghbk'.match(/b(?!c)/g));                   // ["b", "b"]
+    })();
+</script>
+</body>
+</html>

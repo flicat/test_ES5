@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Date</title>
+</head>
+<body>
+<script type="text/javascript">
+    var log = function() {
+        console.log.apply(console, arguments);
+    };
+    var dir = function() {
+        console.dir.apply(console, arguments);
+    };
+
+    (function() {
+        // 直接调用Date方法,无论有没有参数，直接调用Date总是返回当前时间。
+//        log(Date());                        // Wed Dec 31 2014 09:54:01 GMT+0800
+//        log(Date(2015, 1, 1));              // Wed Dec 31 2014 09:54:01 GMT+0800
+
+        // Date对象能够表示的日期范围是1970年1月1日前后各一亿天。
+//        log(new Date(1419955200000));       // Wed Dec 31 2014 00:00:00 GMT+0800
+//        log(new Date(-1419955200000));      // Fri Jan 02 1925 16:00:00 GMT+0800
+//        log(new Date('2014/12/31'));        // Wed Dec 31 2014 00:00:00 GMT+0800
+//        log(new Date('2014', '11', '31'));  // Wed Dec 31 2014 00:00:00 GMT+0800
+//        log(new Date(2014, 11, 32));        // Thu Jan 01 2015 00:00:00 GMT+0800
+
+//        log(new Date(1, 0));                // Tue Jan 01 1901 00:00:00 GMT+0800
+//        log(new Date(0, 0));                // Mon Jan 01 1900 00:00:00 GMT+0800
+//        log(new Date(-1, 0));               // Fri Jan 01 -1 00:00:00 GMT+0800 (公元前)
+
+        // now方法返回当前距离1970年1月1日 00:00:00 UTC的毫秒数
+//        log(Date.now());                    // 1419991930121
+
+        // 页面加载到命令运行时的已经过去的时间，单位是浮点数形式的毫秒。
+//        var date = new Date();
+//        while((new Date()) - date < 5000){
+            // 卡上5秒
+//        }
+//        log(window.performance.now());      // 5024.335999999948
+
+        // Date.UTC方法可以返回UTC时间（世界标准时间）。
+//        log(Date.UTC(2014,11,31,0,0,0,0));                // 1419984000000
+//        log(new Date(1419984000000));                     // Wed Dec 31 2014 08:00:00 GMT+0800
+
+        // toISOString方法返回对应时间的ISO8601写法。
+//        log((new Date()).toISOString());               // 2014-12-31T02:21:06.839Z
+
+        // toJSON方法返回JSON格式的日期对象。
+//        log((new Date()).toJSON());                    // 2014-12-31T02:45:25.523Z
+
+
+    })();
+</script>
+</body>
+</html>
