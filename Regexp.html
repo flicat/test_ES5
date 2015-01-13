@@ -46,13 +46,13 @@
 //        log(str2.match(/(.)b(.)/g));          //  ["abc", "fbh"]
 
         // (?:x)称为非捕获组（Non-capturing group），表示不返回该组匹配的内容，即匹配的结果中不计入这个括号。
-        log("hello world".match(/(?:.+)ll(\w)/));        // ["hello", "o"]
+//        log("hello world".match(/(?:.+)ll(\w)/));        // ["hello", "o"]
 
         // x(?=y)称为先行断言（Positive look-ahead），x只有在y前面才匹配，y不会被计入返回结果。
-        log('abcfbghbk'.match(/b(?=c)/g));                   // ["b"]
+//        log('abcfbghbk'.match(/b(?=c)/g));                   // ["b"]
 
         // x(?!y)称为后行断言（Negative look-ahead），x只有不在y前面才匹配，y不会被计入返回结果。
-        log('abcfbghbk'.match(/b(?!c)/g));                   // ["b", "b"]
+//        log('abcfbghbk'.match(/b(?!c)/g));                   // ["b", "b"]
     })();
 </script>
 </body>

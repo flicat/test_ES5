@@ -30,7 +30,7 @@
 //        log(Object.keys(arr));                     // ["0", "1", "2"]
 //        log(Object.getOwnPropertyNames(arr));      // ["0", "1", "2", "length"]
 
-        var str = function() { return false };
+        var str = function test(a) { return ++a };
 
 //        log(Object.keys(str));                     //  []
 //        log(Object.getOwnPropertyNames(str));      // ["length", "name", "arguments", "caller", "prototype"]
@@ -334,8 +334,11 @@
 //        o2.foo = 456;
 //        log(o2.foo);       // undefined
 
+//        o2.p = 456;
+//        log(o2.p);         // 456
+
 //        delete o2.p;
-//        log(o2.p);           // 132
+//        log(o2.p);           // 456
 
 //        Object.defineProperty(o, 'p', { enumerable: false });      // TypeError: Cannot define property:p, object is not extensible.
 
@@ -360,6 +363,8 @@
         Object.freeze(o5);
 //        o5.foo = 123;
 //        log(o5.foo);        // undefined
+//        o5.p = 789;
+//        log(o5.p);            // 456
 //        delete o5.p;
 //        log(o5.p);            // 456
 
@@ -382,10 +387,7 @@
 
 //        log(o.t);       // world
 
-        var o2 = Object.seal(
-                Object.create(Object.freeze({x:1}),
-                        {y: {value: 2, writable: true}})
-        );
+        var o2 = Object.seal(Object.create(Object.freeze({x:1}), {y: {value: 2, writable: true}}));
 
         o2.hello = 'hello';
         Object.getPrototypeOf(o2).t = "world";
