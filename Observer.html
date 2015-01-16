@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Observer</title>
+    <style type="text/css">
+        .wrap {
+            letter-spacing: 0.05em;
+            width: 90%;
+            margin: 0 auto;
+            font: 400 12px/18px 'microsoft yahei mono';
+        }
+        h2 {
+            color: #666;
+            font-weight: 800;
+            font-size: 14px;
+            line-height: 22px;
+        }
+        h2:before {
+            content: '☆ ';
+            color: #55a7ff;
+            font: 400 14px/22px 'sans-serif';
+        }
+        p {
+            text-indent: 2em;
+            color: #999;
+        }
+
+    </style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+    <h2>ECMASCRIPT VS CSS</h2>
+    <p>Mutation Observer（变动观察器）是监视DOM变动的接口。当DOM对象树发生任何变动的时候，Mutation Observer会得到通知。</p>
+    <p>在概念上，它很接近事件。可以理解为，当DOM发生变动，会触发Mutation Observer事件。但是，它与事件有一个本质不同：事件是同步触发，也就是说，当DOM发生变动，立刻会触发相应的事件；Mutation Observer则是异步触发，DOM发生变动以后，并不会马上触发，而是要等到当前所有DOM操作都结束后才触发。</p>
+    <p>这样设计是为了应付DOM变动频繁的特点。举例来说，如果在文档中连续插入1000个段落（p元素），就会连续触发1000个插入事件，执行每个事件的回调函数，这很可能造成浏览器的卡顿；而Mutation Observer完全不同，只在1000个段落都插入结束后才会触发，而且只触发一次。</p>
+</div>
+<script type="text/javascript">
+    var log = function() {
+        console.log.apply(console, arguments);
+    };
+    var dir = function() {
+        console.dir.apply(console, arguments);
+    };
+
+    (function() {
+        var MutationObserver  = window.MutationObserver || window.WebKitMutationObserver  || window.MozMutationObserver;
+
+        var wrap = document.querySelector('.wrap');
+        var callback = function(MutationRecord, MutationObserver) {
+//            log(MutationRecord);      // [MutationRecord, MutationRecord, MutationRecord]
+            MutationRecord.forEach(function(item) {
+                log(item.type);                // type：观察的变动类型（attribute、characterData或者childList）。
+                log(item.target);              // target：发生变动的DOM对象。
+                log(item.addedNodes);          // addedNodes：新增的DOM对象。
+                log(item.removedNodes);        // removedNodes：删除的DOM对象。
+                log(item.previousSibling);     // previousSibling：前一个同级DOM对象，如果没有则返回null。
+                log(item.nextSibling);         // nextSibling：下一个同级DOM对象，如果没有则返回null。
+                log(item.attributeName);       // attributeName：发生变动的属性。如果设置了attributeFilter，则只返回预先指定的属性。
+                log(item.oldValue);            // oldValue：变动前的值。这个属性只对attribute和characterData变动有效，如果发生childList变动，则返回null。
+                log('----------------');
+            });
+        };
+
+        // 使用MutationObserver构造函数，新建一个实例，同时指定这个实例的回调函数。
+        var observer = new MutationObserver(callback);
+        var options = {
+            childList: true,             // childList：子元素的变动。
+            attributes: true,            // attributes：属性的变动。
+            characterData: true,         // characterData：节点内容或节点文本的变动。
+            subtree: true                // subtree：所有下属节点（包括子节点和子节点的子节点）的变动。
+        };
+        // 不能单独观察subtree变动，必须同时指定childList、attributes和characterData中的一种或多种。
+        observer.observe(wrap, options);
+
+        setTimeout(function() {
+            wrap.setAttribute('id', 'test-wrap');
+            wrap.firstElementChild.innerText = 'Mutation Observer';
+            wrap.appendChild(document.createTextNode('test'));
+
+            // takeRecords方法用来清除变动记录，即不再处理未处理的变动。
+//            observer.takeRecords();
+        }, 500);
+
+        // disconnect方法用来停止观察。发生相应变动时，不再调用回调函数。
+//        observer.disconnect();
+
+    })();
+</script>
+</body>
+</html>

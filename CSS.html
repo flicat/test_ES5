@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>CSS</title>
+    <style type="text/css" media="screen">
+        .wrap {
+            width: 80%;
+            margin: 0 auto;
+        }
+        h2 {
+            letter-spacing: 0.1em;
+            color: #666;
+            font: 800 14px/22px 'Microsoft YaHei';
+        }
+        h2:before {
+            content: '☆ ';
+            color: #55a7ff;
+            font: 400 14px/22px 'sans-serif';
+        }
+        p {
+            letter-spacing: 0.1em;
+            color: #999;
+            font: 400 12px/18px 'Microsoft YaHei';
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h2>ECMASCRIPT VS CSS</h2>
+    <p>CSS与JavaScript是两个有着明确分工的领域，前者负责页面的视觉效果，后者负责与用户的行为互动。但是，它们毕竟同属网页开发的前端，因此不可避免有着交叉和互相配合。</p>
+</div>
+<script type="text/javascript">
+    var log = function() {
+        console.log.apply(console, arguments);
+    };
+    var dir = function() {
+        console.dir.apply(console, arguments);
+    };
+
+    (function() {
+        var wrap = document.querySelector('.wrap');
+
+        // 判断某个DOM元素的style对象的某个属性值是否为字符串。
+//        log(typeof wrap.style.animation === 'string');                  // false
+//        log(typeof wrap.style.webkitAnimation === 'string');            // true
+
+        // 设置某个CSS属性。
+//        wrap.style.setProperty('padding', '10px');
+        // 读取某个CSS属性。
+//        log(wrap.style.getPropertyValue('padding'));                    // 10px
+        // 删除某个CSS属性。
+//        wrap.style.removeProperty('padding');
+
+        var h2 = document.querySelector('h2');
+        // window对象的getComputedStyle方法读写伪元素的样式
+        var computedStyle = window.getComputedStyle(h2, ':before');
+//        log(computedStyle.content);                     // '☆ '
+//        log(computedStyle.color);                       // rgb(85, 167, 255)
+
+    })();
+
+    (function() {
+        // 使用styleSheets属性获取样式表
+        var styleSheets = document.styleSheets;
+//        log(styleSheets);                            // StyleSheetList
+//        log(styleSheets[0]);                         // CSSStyleSheet
+//        log(styleSheets[0].rules[0].cssText);        // .wrap { width: 80%; margin: 0px auto; }
+
+        var style = document.querySelector('style');
+        var sheet = style.sheet;
+//        log(sheet);                             // CSSStyleSheet
+//        log(sheet.href);                          // null
+//        log(sheet.media);                          // {0: "screen", length: 1, mediaText: "screen"}
+//        log(sheet.title);                          // null
+//        log(sheet.type);                          // text/css
+//        log(sheet.cssRules);                      // CSSRuleList
+//        log(sheet.cssRules[0].cssText);         // .wrap { width: 80%; margin: 0px auto; }
+
+    })();
+
+    (function() {
+        var h2 = document.querySelector('h2');
+        // getComputedStyle方法接受一个HTML元素作为参数，返回一个包含该HTML元素的最终样式信息的对象
+        var style = window.getComputedStyle(h2);
+//        log(style.background);        // rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box
+
+        // 媒体查询
+        var result = window.matchMedia('(min-width: 600px)');
+//        log(result);     // {matches: true, media: "(min-width: 600px)", onchange: null}
+
+        var callback = function(mql) {
+            log(mql.matches);   // false
+            log(mql.media);     // (min-width: 600px)
+        };
+        // 如果mediaQuery查询结果发生变化，就调用指定的回调函数。
+        result.addListener(callback);
+        result.removeListener(callback);
+    })();
+</script>
+</body>
+</html>

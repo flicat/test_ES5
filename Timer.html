@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Timer</title>
+</head>
+<body>
+<form action="">
+    <label>输入测试：<input type="text" id="input"/></label>
+</form>
+<script type="text/javascript">
+    (function() {
+        // IE 9.0及以下版本，只允许setTimeout有两个参数，不支持更多的参数。
+//        (function(f){
+//            window.setTimeout = f(window.setTimeout);
+//            window.setInterval = f(window.setInterval);
+//        })(function(f){
+//            return function(c,t) {
+//                var a=[].slice.call(arguments,2);
+//                return f(function() { c.apply(this,a)},t)
+//            }
+//        });
+
+        // 除了前两个参数，setTimeout还允许添加更多的参数。它们将被传入推迟执行的函数（回调函数）。
+        for(var i = 0; i < 3; i++){
+//            setTimeout(function(i) {
+//                console.log(i);              // 0, 1, 2
+//            }, 1000, i);
+        }
+
+        var o = {
+            x: 1,
+            y: function() {
+                console.log(this.x);          // 1
+            }
+        };
+//        setTimeout(o.y.bind(o), 1000);
+
+
+    })();
+
+    (function() {
+        var func = function() {
+            console.log(arguments);        // [123, "hello world"]
+        };
+//        setInterval(func, 1000, 123, 'hello world');
+
+
+        var interval = function(func, delay) {
+            var wait = function() {
+                func.call(null);
+                setTimeout(wait, delay);
+            };
+            setTimeout(wait, delay)
+        };
+
+//        interval(function() {
+//            console.log(123);
+//        }, 1000);
+
+        // setTimeout和setInterval返回的整数值是连续的，也就是说，第二个setTimeout方法返回的整数值，将比第一个的整数值大1。
+        var clearAllTimer = function() {
+            var id = setTimeout(function(){}, 0);
+            while (id > 0){
+                clearTimeout(id);
+                id--;
+            }
+        };
+
+//        setTimeout(clearAllTimer, 3000);
+    })();
+
+    (function(){
+        var input = document.querySelector('#input');
+
+        var callback = function() {
+            var that = this;
+
+            // keypress事件会在浏览器接收文本之前触发。它只能将上一个字符转为大写，因为浏览器此时还没接收到文本
+//            that.value = that.value.toUpperCase();
+
+            // 上面代码将代码放入setTimeout之中，就能使得它在浏览器接收到文本之后触发。
+            setTimeout(function() {
+                that.value = that.value.toUpperCase();
+            }, 0);
+        };
+
+        input.addEventListener('keypress', callback);
+    })();
+
+</script>
+</body>
+</html>

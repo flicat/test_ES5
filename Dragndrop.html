@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Dragndrop</title>
+    <style type="text/css" media="screen">
+        .wrap {
+            letter-spacing: 0.1em;
+            width: 90%;
+            margin: 0 auto;
+            font: 400 12px/18px 'Microsoft YaHei';
+        }
+        h2 {
+            color: #666;
+            font: 800 14px/22px 'Microsoft YaHei';
+        }
+        h2:before {
+            content: '☆ ';
+            color: #55a7ff;
+            font: 400 14px/22px 'sans-serif';
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            color: #999;
+        }
+        li:first-child:before {
+            content: '┌ ';
+        }
+        li:last-child:before {
+            content: '└ ';
+        }
+        li:before {
+            font: 400 18px/18px 'sans-serif';
+            vertical-align: middle;
+            content: '├ ';
+        }
+        .text-wrap {
+            margin: 20px 0;
+            padding: 10px;
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 100px;
+            resize: none;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #33b7ff;
+        }
+        .text-wrap img {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h2>ECMASCRIPT VS CSS</h2>
+     <ul>
+         <li>dragstart：网页元素开始拖动时触发。</li>
+         <li>drag：被拖动的元素在拖动过程中持续触发。</li>
+         <li>dragenter：被拖动的元素进入目标元素时触发，应在目标元素监听该事件。</li>
+         <li>dragleave：被拖动的元素离开目标元素时触发，应在目标元素监听该事件。</li>
+         <li>dragover：被拖动元素停留在目标元素之中时持续触发，应在目标元素监听该事件。</li>
+         <li>drop：被拖动元素或从文件系统选中的文件，拖放落下时触发。</li>
+         <li>dragend：网页元素拖动结束时触发。</li>
+     </ul>
+    <div class="text-wrap" id="text-wrap"></div>
+    <super-button>超级按钮1</super-button>
+    <super-button>超级按钮2</super-button>
+
+    <!--button元素就可以通过is属性，继承 my-button 元素的API。-->
+    <button is="my-button">我的按钮1</button>
+    <button is="my-button">我的按钮2</button>
+</div>
+<script type="text/javascript">
+    var log = function() {
+        console.log.apply(console, arguments);
+    };
+    var dir = function() {
+        console.dir.apply(console, arguments);
+    };
+
+    (function() {
+        var textarea = document.getElementById('text-wrap');
+
+        textarea.addEventListener('dragenter', function(e) { e.preventDefault(); e.stopPropagation(); }, false);
+        textarea.addEventListener('dragover', function(e) { e.preventDefault(); e.stopPropagation(); }, false);
+        textarea.addEventListener('drop', function(e) {
+            log(e);
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            var files = e.dataTransfer.files;
+            if(files.length){
+                log(files);
+
+                textarea.innerHTML = '';
+
+                [].slice.call(files).forEach(function(file) {
+                    var reader = new FileReader();
+
+                    if(/^image/ig.test(file.type)){
+                        reader.onload = function(event) {
+                            var image = new Image();
+                            image.src = event.target.result;
+                            textarea.appendChild(image);
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        reader.onload = function(event) {
+                            var pre = document.createElement('pre');
+                            pre.appendChild(document.createTextNode(event.target.result));
+                            textarea.appendChild(pre);
+                        };
+                        reader.readAsText(file);
+                    }
+                });
+            }
+        }, false);
+
+    })();
+
+    (function() {
+        var buttonProto = Object.create(HTMLElement.prototype);
+        buttonProto.print = function() {
+//            log(this.innerText);
+        };
+
+        // 在使用自定义元素前，必须用document对象的registerElement方法登记该元素，registerElement方法返回一个这个自定义元素的构造函数。
+        var SuperButton = document.registerElement('super-button', {
+            prototype: buttonProto
+        });
+        var button = new SuperButton();
+        button.innerHTML = 'testtest';
+        document.querySelector('.wrap').appendChild(button);
+
+        var sb = document.querySelectorAll('super-button');
+        [].slice.call(sb).forEach(function(item) {
+            item.print();
+        });
+
+    })();
+
+    (function() {
+
+        var buttonProto = Object.create(HTMLElement.prototype);
+        buttonProto.print = function() {
+            log(this.innerText);
+        };
+
+        // registerElement方法的第二个参数，还可以延伸现有元素。
+        var SuperButton = document.registerElement('my-button', {
+            prototype: buttonProto,
+            extends: 'button'
+        });
+
+        var supperButton = document.querySelector('button');
+        supperButton.print();
+
+    })();
+
+</script>
+</body>
+</html>

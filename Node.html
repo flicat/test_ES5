@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Node</title>
+</head>
+<body>
+<header class="top-bar" id="header">
+    <div class="fixed">
+        <nav class="top-bar">
+            <ul>
+                <!-- Title Area -->
+                <li class="name has-dropdown">
+                    <h1><a href="/">JavaScript 标准参考教程（alpha） </a></h1>
+                    <ul class="dropdown">
+                        <li><a href="/#introduction">导论</a></li>
+                        <li><a href="/#grammar">基本语法</a></li>
+                        <li><a href="/#stdlib">标准库</a></li>
+                        <li><a href="/#oop">面向对象编程</a></li>
+                        <li><a href="/#dom">DOM</a></li>
+                        <li><a href="/#bom">浏览器对象</a></li>
+                        <li><a href="/#htmlapi">HTML网页的API</a></li>
+                        <li><a href="/#jquery">jQuery</a></li>
+                        <li><a href="/#tool">开发工具</a></li>
+                        <li><a href="/#advanced">高级语法</a></li>
+                        <li><a href="/#appendix">附录</a></li>
+                        <li><a href="/#library">草稿一：函数库</a></li>
+                        <li><a href="/#nodejs">草稿二：Node.js</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <section>
+                <ul class="left">
+                    <li class="divider"></li>
+                    <li class="has-dropdown"><a class="active" href="#"> DOM </a>
+                        <ul class="dropdown">
+                            <li><a href="/dom/css.html">CSS操作</a></li>
+                            <li><a href="/dom/document.html">document对象</a></li>
+                            <li><a href="/dom/dragndrop.html">拖放操作</a></li>
+                            <li><a href="/dom/event.html">DOM 事件</a></li>
+                            <li><a href="/dom/mutationobserver.html">Mutation Observer</a></li>
+                            <li class="active"><a href="#">Node对象</a></li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="has-dropdown nav-3"><a href="#"> Node对象</a>
+                        <ul class="dropdown">
+                            <li class="toc-h2"><a href="#toc0">Node节点对象</a></li>
+                            <li class="toc-h2"><a href="#toc4">Element对象</a></li>
+                            <li class="toc-h2"><a href="#toc16">Text节点</a></li>
+                            <li class="toc-h2"><a href="#toc19">DocumentFragment节点</a></li>
+                            <li class="toc-h2"><a href="#toc20">参考链接</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="right">
+                    <li class="divider"></li>
+                    <li> <a href="https://github.com/ruanyf/jstutorial" target="_blank">GitHub <i class="foundicon-edit"></i></a> </li>
+                    <li class="divider"></li>
+                    <li> <a href="#">TOP <i class="foundicon-up-arrow"></i></a> </li>
+                </ul>
+            </section>
+        </nav>
+    </div>
+</header>
+<a href="#" data-act="click" data-act-name="test" id="data-test">test</a>
+<script type="text/javascript">
+    var log = function() {
+        console.log.apply(console, arguments);
+    };
+    var dir = function() {
+        console.dir.apply(console, arguments);
+    };
+
+    (function() {
+        // 类型                       nodeName            nodeType
+        // DOCUMENT_NODE            #document               9
+        // ELEMENT_NODE             大写的HTML元素名          1
+        // ATTRIBUTE_NODE           等同于Attr.name          2
+        // TEXT_NODE                #text                   3
+        // DOCUMENT_FRAGMENT_NODE   #document-fragment      11
+        // DOCUMENT_TYPE_NODE       等同于DocumentType.name  10
+
+//        log(document.nodeName);          // #document
+//        log(document.nodeType);          // 9
+
+//        log(document.querySelector('a').nodeType === 1);                  // true
+//        log(document.querySelector('a').nodeType === Node.ELEMENT_NODE);   // true
+
+        // Text节点的nodeValue属性返回文本内容，而其他五类节点都返回null。
+//        log(document.querySelector('a').nodeValue);               // null;
+//        log(document.querySelector('a').firstChild.nodeValue);    // JavaScript 标准参考教程（alpha）
+
+        // childNodes属性返回一个NodeList对象，该对象的成员是父节点的所有子节点
+//        log(document.querySelector('a').childNodes);               // [text]
+        // children属性返回一个类似数组的对象，该对象的成员为HTML元素类型的子节点。
+//        log(document.querySelector('a').children);                 // []
+
+        var ul = document.querySelector('ul.right');
+//        log(ul.firstChild);               // #text                       第一个子节点。
+//        log(ul.lastChild);                // #text                       最后一个子节点。
+//        log(ul.parentNode);               // <section>...</section>      父节点。
+//        log(ul.nextSibling);              // #text                       下一个同级节点。
+//        log(ul.previousSibling);          // #text                       上一个同级节点。
+//        log(ul.firstElementChild);        // <li class="divider">...<li> 第一个类型为HTML元素的子节点。
+//        log(ul.lastElementChild);         // <li>...<li>                 最后一个类型为HTML元素的子节点。
+//        log(ul.nextElementSibling);       // null                        下一个类型为HTML元素的同级节点。
+//        log(ul.previousElementSibling);   // <ul class="left"><ul>       上一个类型为HTML元素的同级节点。
+
+    })();
+
+    (function() {
+        var ul = document.querySelector('ul.right');
+        var li = document.createElement('li');
+        li.appendChild(document.createTextNode('test test test'));
+        // insertBefore()用于将子节点插入父节点的指定位置。
+        ul.insertBefore(li, ul.firstChild);
+
+        var li2 = document.createElement('li');
+        li2.appendChild(document.createTextNode('aaaaaaaaaaaa'));
+        // replaceChild()方法用于将一个新的节点，替换父节点的某一个子节点。
+        ul.replaceChild(li2, li);
+
+        // attributes 属性返回一个数组，数组成员就是Element元素包含的每一个属性节点对象
+        var attr = document.querySelector('header').attributes;
+//        log(attr);                      // {0: class, 1: id, length: 2}
+//        log(attr.item(0).name);         // class
+//        log(attr.item(1).value);        // header
+
+        var script = document.querySelector('script');
+//        log(script.textContent);          // code...
+
+        var li3 = document.querySelector('ul').firstElementChild;
+//        log(li3.className);                     // name has-dropdown
+//        log(li3.classList);                     // ["name", "has-dropdown"]
+
+        // 增加一个class。
+        li3.classList.add('test_test');
+//        log(li3.className);    // name has-dropdown test_test
+
+        // 移除一个class。
+        li3.classList.remove('has-dropdown');
+//        log(li3.className);    // name test_test
+
+        // 将某个class移入或移出该DOM元素。
+        li3.classList.toggle('has-dropdown');
+//        log(li3.className);    // name test_test has-dropdown
+
+        // 检查该DOM元素是否包含某个class。
+//        log(li3.classList.contains('test_test'));   // true
+        // 返回列表中某个特定位置的class。
+//        log(li3.classList.item(1));         // test_test
+        // 将class的列表转为字符串。
+//        log(li3.classList.toString());      // name test_test has-dropdown
+
+    })();
+
+    (function() {
+        // 返回视口（viewport）的大小  不将滚动条计算在内
+//        log(document.documentElement.clientWidth);      // 1423
+//        log(document.documentElement.clientHeight);     // 775
+
+        // 返回视口（viewport）的大小  包括了滚动条的高度和宽度
+//        log(window.innerWidth);                        // 1440
+//        log(window.innerHeight);                       // 775
+
+        // 返回html元素的宽度和高度，即网页的总宽度和总高度。
+//        log(document.documentElement.offsetWidth);      // 1423
+//        log(document.documentElement.offsetHeight);     // 709
+
+        // dataset属性用于操作HTML标签元素的data-*属性。
+        var a = document.querySelector('#data-test');
+//        log(a.dataset);                          // {act: "click", actName: "test"}
+//        log(a.dataset.act);                      // click
+
+        a.dataset.index = 1;
+//        log(a);        // <a href="#" data-act="click" data-act-name="test" id="data-test" data-index="1">test</a>
+
+    })();
+
+    (function() {
+        // elementFromPoint方法用于选择在指定坐标的最上层的Element对象。
+        var elem = document.elementFromPoint(100, 150);
+//        log(elem);            // <a href="/#dom">DOM</a>
+
+        // matchesSelector 方法返回一个布尔值，Element对象是否符合某个CSS选择器。
+//        log(elem.webkitMatchesSelector('a[href="/#dom"]'));         // true
+
+        var ul = document.querySelector('ul.right');
+        // insertAdjacentHTML方法可以将一段字符串，作为HTML或XML对象，插入DOM。
+        // beforebegin： 在指定元素之前插入，变成它的同级元素。
+        // afterbegin：  在指定元素的开始标签之后插入，变成它的第一个子元素。
+        // beforeend：   在指定元素的结束标签之前插入，变成它的最后一个子元素。
+        // afterend：    在指定元素之后插入，变成它的同级元素。
+        ul.insertAdjacentHTML('beforebegin', '<a href="#">|--beforebegin</a>');
+        ul.insertAdjacentHTML('afterbegin', '<li>|--afterbegin</li>');
+        ul.insertAdjacentHTML('beforeend', '<li>|--beforeend</li>');
+        ul.insertAdjacentHTML('afterend', '<a href="#">|--afterend</a>');
+
+
+        var div = document.querySelector('div');
+        var clientRect = div.getBoundingClientRect();
+//        log(clientRect);  // {"height":776.90625,"width":1407,"left":8,"bottom":317.8125,"right":1415,"top":-459.09375}
+
+    })();
+
+    (function() {
+        var textNode = document.querySelector('#data-test').firstChild;
+//        log(textNode);                   // test
+
+        // 在文本尾部追加字符串。
+        textNode.appendData(' test add');      // test test add
+        // 删除子字符串，第一个参数为子字符串位置，第二个参数为子字符串长度
+        textNode.deleteData(10, 2);             // test test d
+        // 在文本中插入字符串，第一个参数为插入位置，第二个参数为插入的子字符串。
+        textNode.insertData(10, 'aaaaaa');      // test test aaaaaad
+        // 替换文本，第一个参数为替换开始位置，第二个参数为需要被替换掉的长度，第三个参数为新加入的字符串。
+        textNode.replaceData(10, 6, 'AAAAA');  // test test AAAAAd
+        // 获取子字符串，第一个参数为子字符串在文本中的开始位置，第二个参数为子字符串长度。
+//        log(textNode.substringData(5, 5));     // test
+
+    })();
+
+    (function() {
+        // DocumentFragment节点代表一个完整的DOM树形结构，但是不属于当前文档，只存在于内存之中。
+        var frag = document.createDocumentFragment();
+        for(var i = 0; i < 10; i++){
+            var li = document.createElement('li');
+            li.appendChild(document.createTextNode('-- ' + i + ' --'));
+            frag.appendChild(li);
+        }
+        document.querySelector('ul').appendChild(frag);
+
+    })();
+
+</script>
+</body>
+</html>

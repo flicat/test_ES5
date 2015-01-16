@@ -103,8 +103,48 @@
 //        log(o2.x);              // 11
 
         // isPrototypeOf方法用来判断一个对象是否是另一个对象的原型。
-        log(o1.isPrototypeOf(o2));   // true
+//        log(o1.isPrototypeOf(o2));   // true
     })();
+
+    (function() {
+        var o = {};
+        // _proto_属性指向该对象的原型对象prototype。
+//        log(o.__proto__ === o.constructor.prototype);      // true
+
+        Array.prototype.p = 123;
+        var a = [];
+//        log(a.p);                                // 123
+//        log(a.__proto__.p);                      // 123
+//        log(a.constructor.prototype.p);          // 123
+
+        var o2 = {
+            x: 1,
+            y: 2
+        };
+        var o3 = {
+            __proto__: o2
+        };
+        var o4 = {
+            __proto__: o3
+        };
+//        log(o3.x);                // 1
+//        log(o4.x);                // 1
+
+    })();
+
+    (function() {
+        var proto = {
+            x: 1,
+            y: 2
+        };
+        var o1 = Object.create(proto);
+
+//        log(o1.x);                                // 1
+//        log(o1.hasOwnProperty('x'));              // false
+        log('x' in o1);                           // true
+
+    })();
+
 </script>
 </body>
 </html>

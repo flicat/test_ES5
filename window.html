@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>window</title>
+    <style type="text/css">
+        body {
+            width: 1024px;
+            height: 768px;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript">
+    (function() {
+        // 浏览器刷新后，该属性保持不变。所以，可以把值存放在该属性内，然后跨页面、甚至跨域名使用。
+        !window.name && (window.name = 'hello world');
+//        console.log(window.name);
+
+        // 浏览器窗口的高度和宽度，单位为像素。当用户放大网页的时候（比如将网页从100%的大小放大为200%），这两个属性会变小。
+//        console.log(window.innerWidth);               // 640
+//        console.log(window.innerHeight);              // 775
+
+        // window.pageXOffset属性返回页面的水平滚动距离，window.pageYOffset属性返回页面的垂直滚动距离。
+//        console.log(window.pageXOffset);               // 409
+//        console.log(window.pageYOffset);              // 26
+
+    })();
+
+    (function() {
+        console.log(history.length);              // 3
+
+        // 添加一条历史记录（state, title, url）
+        history.pushState('test_1', null, 'http://192.168.0.206:8005/test_1.html');
+        history.pushState('test_2', null, 'http://192.168.0.206:8005/test_2.html');
+
+        // 当同一个文档的浏览历史（即history对象）出现变化时，就会触发popstate事件。
+        window.addEventListener('popstate', function(e) {
+//            console.log(e.state);       // test_1, null
+        });
+
+    })();
+</script>
+</body>
+</html>

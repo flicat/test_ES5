@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Event</title>
+    <style type="text/css">
+        .wrap {
+            width: 80%;
+            height: 80%;
+            margin: 0 auto;
+        }
+        .debug {
+            position: absolute;
+            z-index: -1;
+            right: 0;
+            bottom: 0;
+            width: 30%;
+            height: 20%;
+            border: 1px solid #999;
+        }
+        h1 {
+            color: #666;
+            -webkit-transition: all 1s ease;
+            transition: all 1s ease;
+        }
+        h1.hover {
+            color: #99f;
+        }
+        h1.animation {
+            -webkit-animation: toggle 1s ease 0s 2 alternate;
+            animation: toggle 1s ease 0s 2 alternate;
+        }
+        @keyframes toggle {
+            0% {
+                color: #faa;
+            }
+            100% {
+                color: #aff;
+            }
+        }
+        @-webkit-keyframes toggle {
+            0% {
+                color: #faa;
+            }
+            100% {
+                color: #aff;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h1>title</h1>
+    <p>testtesttesttesttesttesttesttesttesttest</p>
+</div>
+<textarea class="debug" id="debug"></textarea>
+<script type="text/javascript">
+    var log = function() {
+        console.log.apply(console, arguments);
+    };
+    var dir = function() {
+        console.dir.apply(console, arguments);
+    };
+
+    (function() {
+        var phases = {
+            1: '捕获阶段',
+            2: '目标阶段',
+            3: '冒泡阶段'
+        };
+
+        var callback = function (event) {
+            var tag = event.currentTarget.tagName;
+            var phase = phases[event.eventPhase];
+            log("Tag: '" + tag + "'. EventPhase: '" + phase + "'");
+            // Tag: 'DIV'. EventPhase: '捕获阶段'
+            // Tag: 'P'. EventPhase: '目标阶段'
+            // Tag: 'P'. EventPhase: '目标阶段'
+            // Tag: 'DIV'. EventPhase: '冒泡阶段'
+        };
+
+        var div = document.querySelector('div');
+        var p = document.querySelector('p');
+
+//        div.addEventListener('click', callback, true);
+//        p.addEventListener('click', callback, true);
+//        div.addEventListener('click', callback, false);
+//        p.addEventListener('click', callback, false);
+
+//        div.addEventListener('click', function(e){
+//            log('div');                  // 不会执行
+//        }, false);
+//        p.addEventListener('click', function(e){
+//            log('here');                 // here
+//            e.stopPropagation();               // 停止事件冒泡
+//            e.stopImmediatePropagation();      // 停止触发未完成的事件绑定
+//        }, false);
+//        p.addEventListener('click', function(e){
+//            log('click');                 // 不会执行
+//        }, false);
+
+    })();
+
+    (function() {
+        var debug = document.getElementById('debug');
+        var callback = function (event) {
+            debug.value = event.type;
+        };
+
+//        document.addEventListener('touchstart', callback, false);
+//        document.addEventListener('touchend', callback, false);
+//        document.addEventListener('touchmove', callback, false);
+//        document.addEventListener('touchenter', callback, false);
+//        document.addEventListener('toucheleave', callback, false);
+//        document.addEventListener('touchcancel', callback, false);
+
+//        window.onbeforeunload = function() {
+//            return '你确认要离开?';
+//        };
+
+        var time = new Date;
+        // DOMContentLoaded事件在网页解析完成时触发，此时各种外部资源（resource）还没有被完全下载。
+//        document.addEventListener('DOMContentLoaded', function() {
+//            log('DOM ready');
+//            log(new Date - time);
+//        }, false);
+//        window.addEventListener('load', function() {
+//            log('load');
+//            log(new Date - time);
+//        }, false);
+    })();
+
+    (function() {
+        var p = document.querySelector('p');
+        var debug = document.getElementById('debug');
+        var callback = function (event) {
+            log(event.type, event);
+        };
+//        p.addEventListener('dragstart', callback, false);           // 在用户开始用鼠标拖拉某个对象时触发
+//        p.addEventListener('drag', callback, false);                // drag事件在源对象被拖拉过程中触发。
+//        p.addEventListener('dragend', callback, false);             // 结束拖拉时触发
+
+//        debug.addEventListener('dragenter', callback, false);       // dragenter事件在源对象拖拉进目标对象后，在目标对象上触发
+//        debug.addEventListener('dragover', callback, false);        // dragover事件在源对象拖拉过另一个对象上方时，在后者上触发。
+//        debug.addEventListener('dragleave', callback, false);       // dragleave事件在源对象离开目标对象后，在目标对象上触发。
+//        debug.addEventListener('drop', callback, false);            // 当源对象被拖拉到目标对象上方，用户松开鼠标时，在目标对象上触发drop事件。
+    })();
+
+    (function() {
+        var h1 = document.querySelector('h1');
+        var callback = function(e) {
+            log(e.type, e);
+        };
+        // CSS变动的过渡（transition）结束后，触发transitionEnd事件。
+//        h1.addEventListener('webkitTransitionEnd', callback, false);
+//        setTimeout(function() {
+//            h1.classList.add('hover');
+//        }, 1000);
+
+          // animation动画开始时，触发animationstart事件；结束时，触发animationend事件。
+//        h1.addEventListener('webkitAnimationStart', callback, false);
+//        h1.addEventListener('webkitAnimationIteration', callback, false);
+//        h1.addEventListener('webkitAnimationEnd', callback, false);
+//        setTimeout(function() {
+//            h1.classList.add('animation');
+//        }, 1000);
+    })();
+
+    (function() {
+        var callback = function(e) {
+            log(e.pageX, e.pageY);                         // 点击位置相对于html元素的坐标，单位为CSS像素。
+            log(e.clientX, e.clientY);                     // 点击位置相对于视口（viewport）的坐标，单位为CSS像素。
+            log(e.screenX, e.screenY);                     // 点击位置相对于设备显示屏幕的坐标，单位为设备硬件的像素。
+
+            e.preventDefault();            // 阻止事件所对应的浏览器默认行为。
+            e.stopPropagation();           // 阻止事件在DOM中继续传播
+            e.stopImmediatePropagation();  // 作用与stopPropagation方法相同，唯一的区别是还阻止当前节点上后继定义的事件回调函数。
+        };
+//        document.addEventListener('click', callback, false);
+    })();
+
+    (function() {
+        // 使用浏览器原生方法创造自定义事件
+        var event = document.createEvent('Event');
+        // 初始化事件（事件名，是否冒泡，是否可以取消）
+        event.initEvent('test_event', true, true);
+
+        var elem = document.querySelector('.wrap');
+        elem.addEventListener('test_event', function(e) {
+            log(e);                 // Event
+            alert(e.type);          // 兼容好
+        }, false);
+        // 触发事件
+//        elem.dispatchEvent(event);
+
+        // 模仿并触发click事件。
+        var simulateDivClick = document.createEvent('MouseEvents');
+        // initMouseEvent(type,bubbles,cancelable,view,detail,screenx,screeny,clientx,clienty,ctrlKey,altKey,shiftKey,metaKey,button,relatedTarget)
+        simulateDivClick.initMouseEvent('click',true,true,document.defaultView,0,0,0,0,0,false,false,false,0,null,null);
+//        elem.addEventListener('click', function(e) {
+//            log(e);                 // Event
+//        }, false);
+//        // 触发事件
+//        elem.dispatchEvent(simulateDivClick);
+
+
+        // 是使用CustomEvent构造函数，自定义事件对象。事件名称，事件的属性对象。
+        var myEvent = new CustomEvent('my_event', {
+            detail: {
+                foo: "bar"
+            },
+            bubbles: true,
+            cancelable: false
+        });
+        elem.addEventListener('my_event', function(e) {
+            log(e);                 // CustomEvent
+            alert(e.type);          // UC支持，微信不支持
+        }, false);
+//        elem.dispatchEvent(myEvent);
+    })();
+
+</script>
+</body>
+</html>
