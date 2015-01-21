@@ -25,12 +25,15 @@
             margin: 50px auto;
             display: flex;
             flex-wrap: wrap;
+            box-sizing: border-box;
         }
         .wrap li {
             width: 250px;
             display: block;
         }
     </style>
+
+    <script type="text/javascript" src="js/public.js"></script>
 </head>
 <body>
 <h1>ECMAScript 5</h1>

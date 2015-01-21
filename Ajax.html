@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ajax</title>
+    <script type="text/javascript" src="js/public.js"></script>
+</head>
+<body>
+<form action="#" id="form">
+    <label>用户名：<input type="text" name="username" value="flicat"></label><br/>
+    <label>密　码：<input type="password" name="password" value="aaaaaaaa"></label><br/>
+</form>
+<label>附　件：<input type="file" id="file" name="file" multiple></label><br/>
+<button type="button" id="submit">提交</button><br/><br/>
+
+<progress min="0" max="100" value="0" id="progress"></progress>
+<pre id="output"></pre>
+<script type="text/javascript">
+
+
+    (function() {
+        var form = document.getElementById('form');
+        var submit = document.getElementById('submit');
+        var output = document.getElementById('output');
+        var progress = document.getElementById('progress');
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() {
+            if(xhr.status === 200 && xhr.readyState === 4){
+                log(xhr);
+                output.innerHTML = xhr.responseText;
+            }
+        };
+
+
+        // onabort:
+        // onerror:
+        // onload:
+        // onloadend:
+        // onloadstart:
+        // onprogress:
+        // ontimeout:
+        xhr.upload.onprogress = function(e) {
+            if(e.lengthComputable){
+                progress.value = (e.loaded / e.total) * 100;
+            }
+        };
+
+        xhr.onload = function(e) {
+            log(e.total);
+        };
+
+
+        submit.addEventListener('click', function() {
+            // 发送方法，一般来说为“GET”、“POST”、“PUT”和“DELETE”中的一个值。
+            // 网址。
+            // 是否异步，true表示异步，false表示同步。
+//            xhr.open('GET', '/test_ajax.php?data=aaaaaaa', true);
+            xhr.open('POST', '/test_ajax.php', true);
+
+            // 'text'：返回类型为字符串，这是默认值。
+            // 'arraybuffer'：返回类型为ArrayBuffer。
+            // 'blob'：返回类型为Blob。
+            // 'document'：返回类型为Document。
+            // 'json'：返回类型为JSON object。
+            xhr.responseType = 'text';
+
+            // setRequestHeader方法用于设置HTTP请求的头信息。
+//            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            // send方法用于实际发出HTTP请求。
+            // 发送字符串查询参数
+//            xhr.send('data=aaaaaaa');
+
+            // 使用 formData 对象发送数据不需要设置 Content-Type
+            // FormData对象还可以对现有表单添加数据
+            var formData = new FormData(form);
+            formData.append('data', 'aaaaaaaaa');
+            formData.append('test', '123456789');
+
+            // 添加文件 FormData对象只能提取一个文件
+            [].slice.call(document.getElementById('file').files).forEach(function(file, i) {
+                // 表单控件名，文件(可以为二进制数据)，文件名（可选）
+                formData.append(file.name, file, 'file_' + i);
+            });
+
+            xhr.send(formData);
+        }, false);
+    })();
+</script>
+</body>
+</html>

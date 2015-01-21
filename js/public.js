@@ -6,31 +6,41 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var Public = {
-    type: (function() {
-        var toString = function(o) {
-            return Object.prototype.toString.call(o);
-        };
-        var type = function(o) {
-            return toString(o).match(/\[object (.*?)\]/)[1].toLowerCase();
-        };
-        ['Null', 'Undefined', 'Object', 'Array', 'String', 'Number', 'Boolean',
-            'Function', 'RegExp', 'Element', 'NaN', 'Infinite'].forEach(function (t) {
-                type['is' + t] = function (o) {
-                    return type(o) === t.toLowerCase();
-                };
-            });
+var type = (function() {
+    var toString = function(o) {
+        return Object.prototype.toString.call(o);
+    };
+    var type = function(o) {
+        return toString(o).match(/\[object (.*?)\]/)[1].toLowerCase();
+    };
+    ['Null', 'Undefined', 'Object', 'Array', 'String', 'Number', 'Boolean',
+        'Function', 'RegExp', 'Element', 'NaN', 'Infinite'].forEach(function (t) {
+            type['is' + t] = function (o) {
+                return type(o) === t.toLowerCase();
+            };
+        });
 
-        return type;
-    })()
+    return type;
+})();
+var log = function() {
+    console.log.apply(console, arguments);
 };
+var dir = function() {
+    console.dir.apply(console, arguments);
+};
+var print = (function() {
+    var textarea;
+    var create = function() {
+        textarea = textarea = document.createElement('textarea');
+        textarea.id = 'print_r';
+        textarea.style.cssText = 'position:absolute;right:0;bottom:0;z-index:9999;width:100%;height:200px';
+        document.body.appendChild(textarea);
+    };
 
-// RequireJS || SeaJS
-if (typeof define === 'function') {
-    define(function(require, exports, module) {
-        module.exports = Public;
-    });
-// NodeJS
-} else if (typeof exports !== 'undefined') {
-    module.exports = Swipe;
-}
+    return function() {
+        !textarea && create();
+        [].slice.call(arguments).forEach(function(item) {
+            textarea.value += item + '\n';
+        });
+    }
+})();

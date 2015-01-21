@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IndexedDB</title>
+
+    <script type="text/javascript" src="js/public.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+
+    (function() {
+        // open方法用于打开数据库。open方法的第一个参数是数据库名称；第二个参数是数据库版本，是一个大于0的正整数（0将报错）。
+        var db, openRequest = indexedDB.open('test', 1);
+//        log(openRequest);         // IDBOpenDBRequest
+
+        // success：打开成功。
+        // error：打开失败。
+        // upgradeneeded：第一次打开该数据库，或者数据库版本发生变化。
+        // blocked：上一次的数据库连接还未关闭。
+        openRequest.onsuccess = function(e) {
+            log('success', e);
+            db = e.target.result;
+//            log(db);             // IDBDatabase
+
+        };
+        openRequest.onerror = function(e) {
+            log('error', e);
+        };
+        openRequest.onupgradeneeded = function(e) {
+            log('upgradeneeded', e);
+        };
+        openRequest.onblocked = function(e) {
+            log('blocked', e);
+        };
+
+    })();
+</script>
+</body>
+</html>

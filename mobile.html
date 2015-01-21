@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>mobile</title>
+    <script type="text/javascript" src="js/public.js"></script>
+    <style type="text/css">
+        #compass {
+            font: 900 100px/1 'microsoft yahei mono';
+            text-align: center;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -50px 0 0 -50px;
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            -webkit-perspective-origin: 50% 50%;
+            perspective-origin: 50% 50%;
+            -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+
+            /*-webkit-transform: rotateX(10deg) rotateY(10deg) rotateZ(45deg);*/
+            /*transform: rotateX(10deg) rotateY(10deg) rotateZ(45deg);*/
+        }
+    </style>
+</head>
+<body>
+<div id="compass">top</div>
+<script type="text/javascript">
+    (function() {
+        var success = function(e) {
+            var coords = e.coords;
+            print(coords.latitude);       // 纬度
+            print(coords.longitude);       // 经度
+            print(coords.accuracy);       // 精度
+            print(coords.altitude);       // 海拔
+            print(coords.altitudeAccuracy);       // 海拔精度（单位：米）
+            print(coords.heading);       // 以360度表示的方向
+            print(coords.speed);       // 每秒的速度（单位：米）
+        };
+        var error = function(e) {
+            // 0：未知错误，浏览器没有提示出错的原因，相当于常量event.UNKNOWN_ERROR。
+            // 1：用户拒绝授权，相当于常量event.PERMISSION_DENIED。
+            // 2：没有得到位置，GPS或其他定位机制无法定位，相当于常量event.POSITION_UNAVAILABLE。
+            // 3：超时，GPS没有在指定时间内返回结果，相当于常量event.TIMEOUT。
+            print('Error code: ' + e.code + ' ' + e.message);
+        };
+        var option = {
+            enableHighAccuracy: true, // 如果设为true，就要求客户端提供更精确的位置信息，这会导致更长的定位时间和更大的耗电，默认设为false。
+            timeout: Infinity,        // 等待客户端做出回应的最大毫秒数，默认值为Infinity（无限）。
+            maximumAge : 0            // 客户端可以使用缓存数据的最大毫秒数。如果设为0，客户端不读取缓存；如果设为infinity，客户端只读取缓存。
+        };
+
+        // getCurrentPosition方法，用来获取用户的地理位置。
+//        navigator.geolocation.getCurrentPosition(success, error, option);
+        // watchPosition方法可以用来监听用户位置的持续改变，使用方法与getCurrentPosition方法一样。
+//        navigator.geolocation.watchPosition(success, error, option);
+    })();
+
+    (function() {
+        navigator.vibrate = navigator.vibrate
+                || navigator.webkitVibrate
+                || navigator.mozVibrate
+                || navigator.msVibrate;
+
+        // vibrate方法可以使得设备振动，它的参数就是振动持续的毫秒数。
+//        navigator.vibrate(1000);
+
+        // vibrate方法还可以接受一个数组作为参数，表示振动的模式。偶数位置的数组成员表示振动的毫秒数，奇数位置的数组成员表示等待的毫秒数。
+//        navigator.vibrate([500, 300, 100]);
+
+        // 要停止振动，只有将0毫秒或者一个空数组传入vibrate方法。
+//        setTimeout(function() {
+//            navigator.vibrate(0);
+//        }, 500);
+    })();
+
+    (function() {
+        var compass = document.getElementById('compass');
+
+        // 一旦设备的方向发生变化，会触发deviceorientation事件，可以对该事件指定回调函数。
+        window.addEventListener("deviceorientation", function(e) {
+//            log(e);
+//            print(e.alpha);      // 表示围绕z轴的旋转，从0到360度。当设备水平摆放时，顶部指向地球的北极，alpha此时为0。
+//            print(e.beta);       // 表示围绕x轴的旋转，从-180度到180度。当设备水平摆放时，beta此时为0。
+//            print(e.gamma);      // 表示围绕y轴的选择，从-90到90度。当设备水平摆放时，gramma此时为0。
+            compass.style.transform =
+                    compass.style.webkitTransform = 'rotateX(' + e.beta + 'deg) rotateY(' + e.gamma + 'deg) rotateZ(' + (360 - e.alpha) + 'deg)';
+
+        });
+
+        // 提供设备的加速信息，表示为定义在设备上的坐标系中的卡尔迪坐标。其还提供了设备在坐标系中的自转速率。
+        window.addEventListener("devicemotion", function(e) {
+//            log(e);
+        });
+
+    })();
+</script>
+</body>
+</html>

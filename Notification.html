@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Notification</title>
+    <script type="text/javascript" src="js/public.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    (function() {
+        var notification;
+
+        var bind = function() {
+            // click：用户点击通知时触发。
+            // close：用户或者浏览器关闭通知时触发。
+            // error：通知发生错误时触发。
+            // show：通知显示时触发。
+            notification.onshow = function() {
+                log(arguments);
+                setTimeout(function() {
+                    // 关闭通知
+                    notification.close();
+                }, 3000);
+            };
+            notification.onclose = function() {
+                log(arguments);
+            };
+            notification.onerror = function() {
+                log(arguments);
+            };
+            notification.onclick = function() {
+                log(arguments);
+            };
+        };
+
+        // permission 属性，用于读取用户给于的权限。
+        // denied：用户不接受通知。
+        // granted：用户同意接受通知。
+        // default：用户的选择未知。
+        if(Notification.permission === 'granted'){
+            // 第一个参数是通知的标题，格式为字符串；第二个参数是可选的，格式为一个对象，用来设定各种设置。该对象的属性如下：
+            // body：字符串，用来进一步说明通知的目的。
+            // lang：设定通知所使用的语言，比如en-US、zh-CN。
+            // dir：设定语言的阅读方法，ltr表示从左到右，rtl表示从右到左，一般是继承浏览器的设置。
+            // tag： 字符串，用来设定通知的ID标签。
+            // icon：图像文件的网址，用来设定通知的图标。
+            notification = new Notification('收到新邮件', {
+                body: '您总共有3封未读邮件。'
+            });
+            log(notification.title);
+            log(notification.body);
+            bind();
+        } else if(Notification.permission !== 'denied'){
+
+            // Notification.requestPermission方法，用于获取用户的同意
+            Notification.requestPermission(function(permission) {
+                if(!('permission' in Notification)) {
+                    Notification.permission = permission
+                }
+                if (permission === "granted") {
+                    var notification = new Notification('收到新邮件', {
+                        body: '您总共有3封未读邮件。'
+                    });
+                    bind();
+                }
+            });
+        }
+
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>performance</title>
+    <script type="text/javascript" src="js/public.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    (function() {
+        // performance对象的timing属性指向一个对象，它包含了各种与浏览器性能有关的时间数据，提供浏览器处理网页各个阶段的耗时。
+//        log(performance);
+
+        window.onload = function() {
+            var t = performance.timing;
+
+//            log(t.loadEventStart - t.navigationStart);        // 49   页面加载的耗时
+//            log(t.domainLookupEnd - t.domainLookupStart);     // 1    域名解析的耗时
+//            log(t.connectEnd - t.connectStart);               // 1    TCP连接的耗时
+//            log(t.responseStart - t.navigationStart);         // 25   读取页面第一个字节之前的耗时
+        };
+
+        // performance.now方法返回当前网页自从performance.timing.navigationStart到当前时间之间的微秒数（毫秒的千分之一）
+//        log(performance.now());
+
+        // 0：网页通过点击链接、地址栏输入、表单提交、脚本操作等方式加载，相当于常数performance.navigation.TYPE_NAVIGATENEXT。
+        // 1：网页通过“重新加载”按钮或者location.reload()方法加载，相当于常数performance.navigation.TYPE_RELOAD。
+        // 2：网页通过“前进”或“后退”按钮加载，相当于常数performance.navigation.TYPE_BACK_FORWARD。
+        // 255：任何其他来源的加载，相当于常数performance.navigation.TYPE_UNDEFINED。
+        log(performance.navigation.type);
+
+        // 该属性表示当前网页经过了多少次重定向跳转。
+        log(performance.navigation.redirectCount);
+    })();
+</script>
+</body>
+</html>
