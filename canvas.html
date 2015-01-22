@@ -21,9 +21,13 @@
             -webkit-box-align: center;
             box-align: center;
         }
-        .button-group button {
+        .button-group button,
+        .button-group a {
             display: block;
             margin: 0 10px;
+        }
+        .button-group a {
+
         }
     </style>
 </head>
@@ -40,6 +44,7 @@
     <button id="brightness">亮度效果</button>
     <button id="reversal">反转效果</button>
     <button id="restoration">复原图片</button>
+    <a id="download" href="#" target="_blank">下载图片</a>
 </div>
 
 <script type="text/javascript">
@@ -55,6 +60,7 @@
         var brightness = document.getElementById('brightness');       // 亮度效果
         var reversal = document.getElementById('reversal');           // 反转效果
         var restoration = document.getElementById('restoration');     // 复原图片
+        var download = document.getElementById('download');           // 下载图片
 
         // 图片数据缓存
         var ImageData = null, ImageBackup = null;
@@ -120,10 +126,15 @@
             restoration: function() {
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 context.drawImage(ImageBackup, 0, 0, canvas.width, canvas.height);
-                setTimeout(function() {
-                    ImageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                }, 0);
+                setImageData();
             }
+        };
+
+        // 设置图片数据缓存
+        var setImageData = function() {
+            setTimeout(function() {
+                ImageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            }, 0);
         };
 
         // 将图片添加至画布
@@ -132,9 +143,7 @@
             canvas.width = image.width;
             canvas.height = image.height;
             context.drawImage(image, 0, 0, canvas.width, canvas.height);
-            setTimeout(function() {
-                ImageData = context.getImageData(0, 0, canvas.width, canvas.height);
-            }, 0);
+            setImageData();
         };
 
         // 使用滤镜处理图片
@@ -165,6 +174,14 @@
                 };
                 reader.readAsDataURL(file);
             }
+        });
+
+        // 点击下载图片
+        download.addEventListener('mousedown', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.href = canvas.toDataURL("image/jpeg");
+            this.download = 'download.jpg';
         });
 
         // 点击添加效果
