@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>eventsource</title>
+    <script type="text/javascript" src="js/public.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    (function() {
+        // 服务器发送事件（Server-Sent Events，简称SSE）
+        var source = new EventSource('eventsource.php');
+        // 持续接收数据
+        source.addEventListener('message', function(e) {
+            log(e.data);                // 服务器端传回的数据（文本格式）。
+            log(JSON.parse(e.data));    // 服务器端传回的数据（文本格式）。
+            log(e.origin);              // 服务器端URL的域名部分，即协议、域名和端口。
+            log(e.lastEventId);         // 数据的编号，由服务器端发送。
+        });
+        // 连接一旦建立，就会触发open事件
+        source.addEventListener('open', function(e) {
+//            log(e);
+        });
+        // 如果发生通信错误（比如连接中断），就会触发error事件。
+        source.addEventListener("error", function(e) {
+//            log(e);
+        }, false);
+
+        // 0，相当于常量EventSource.CONNECTING，表示连接还未建立，或者连接断线。
+        // 1，相当于常量EventSource.OPEN，表示连接已经建立，可以接受数据。
+        // 2，相当于常量EventSource.CLOSED，表示连接已断，且不会重连。
+        log(source.readyState);
+
+
+        setTimeout(function() {
+            // close方法用于关闭连接。
+            source.close();
+        }, 10000);
+    })();
+</script>
+</body>
+</html>

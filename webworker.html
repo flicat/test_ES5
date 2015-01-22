@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>webworker</title>
+    <script type="text/javascript" src="js/public.js"></script>
+</head>
+<body>
+<script type="text/worker" id="worker">
+    addEventListener('message', function(e) {
+        postMessage('hello, ' + e.data + ' !');
+    });
+</script>
+<script type="text/javascript">
+    (function() {
+        var worker = new Worker('js/worker.js');
+
+        var obj = {
+            message: 'hello world !'
+        };
+
+        // postMessage方法的最后一个参数必须是一个数组，用来指定前面发送的哪些值可以被转移给子线程(址传递，只适用 MessagePort 和 ArrayBuffer )。
+//        worker.postMessage(obj);
+
+        worker.addEventListener('message', function(e) {
+            log(e.data.message);          // you said: hello world !
+            // 关闭线程
+            worker.terminate();
+        });
+        worker.addEventListener('error', function(e) {
+            log(e);
+        });
+
+
+    })();
+
+    (function() {
+        // 同页面的 worker
+        var blob = new Blob([document.querySelector('#worker').textContent]);
+        var worker = new Worker(window.URL.createObjectURL(blob));
+
+        worker.addEventListener('message', function(e) {
+            log(e.data);               // hello, flicat !
+            // 关闭线程
+            worker.terminate();
+        });
+        worker.postMessage('flicat');
+    })();
+</script>
+</body>
+</html>

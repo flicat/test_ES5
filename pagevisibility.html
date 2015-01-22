@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>pagevisibility</title>
+    <script type="text/javascript" src="js/public.js"></script>
+    <style type="text/css">
+        p {
+            font: 900 60px/2 'microsoft yahei';
+            color: #00f;
+            -webkit-transition: all 2s ease;
+            transition: all 2s ease;
+        }
+    </style>
+</head>
+<body>
+<p id="text">this is a text !</p>
+<script type="text/javascript">
+    (function() {
+        var text = document.getElementById('text');
+
+        // 表示当前页面是否被隐藏。
+        log(document.hidden);        // false
+
+        // 表示页面当前的状态，可以取三个值，分别是visibile（页面可见）、hidden（页面不可见）、prerender（页面正处于渲染之中，不可见）。
+        log(document.visibilityState);
+
+        // 当页面的可见状态发生变化时，会触发VisibilityChange事件（带有浏览器前缀）。
+        document.addEventListener('visibilitychange', function(e) {
+            log(document.visibilityState);
+            switch(document.visibilityState){
+                case 'visible': text.style.color = '#0f0'; break;
+                case 'hidden': text.style.color = '#f00'; break;
+                case 'prerender': text.style.color = '#ff0'; break;
+            }
+        })
+    })();
+</script>
+</body>
+</html>
