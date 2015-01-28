@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <script type="text/javascript" src="js/public.js"></script>
+    <title>webrtc</title>
+</head>
+<body>
+<video id="video" width="320" height="480"></video>
+<canvas id="canvas" width="320" height="480"></canvas>
+<script type="text/javascript">
+    (function() {
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+
+        // navigator.getUserMedia方法目前主要用于，在浏览器中获取音频（通过麦克风）和视频（通过摄像头）。
+        navigator.getUserMedia  = navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia;
+
+        // 通过浏览器捕获声音，需要借助Web Audio API。
+//        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+//        var audioContext = new AudioContext();
+
+        var success = function(stream) {
+//            var audioInput = context.createMediaStreamSource(stream);
+//            audioInput.connect(context.destination);
+            video.src = window.URL.createObjectURL(stream);
+            video.play();
+        };
+        var error = function(error) {
+            // PERMISSION_DENIED：用户拒绝提供信息。
+            // NOT_SUPPORTED_ERROR：浏览器不支持硬件设备。
+            // MANDATORY_UNSATISFIED_ERROR：无法发现指定的硬件设备。
+            print("navigator.getUserMedia error: ", error);
+        };
+
+        navigator.getUserMedia({
+//            video: true,
+            // 指定一些限制条件，比如限定只能录制高清（或者VGA标准）的视频。
+            video: {
+                mandatory: {
+                    minWidth: 600,
+                    minHeight: 400,
+                    maxWidth: 640,
+                    maxHeight: 400
+                }
+            },
+            audio: true
+        }, success, error);
+
+        // 点击截图
+        video.addEventListener('click', function() {
+            context.drawImage(video, 0, 0);
+        });
+    })();
+
+</script>
+</body>
+</html>

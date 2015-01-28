@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <script type="text/javascript" src="js/public.js"></script>
+    <title>fullscreen</title>
+    <style type="text/css">
+        /* 使用 full-screen 伪类，可以对全屏状态设置单独的CSS属性。 */
+        :-webkit-full-screen {
+            background-color: #ff0;
+            border: 1px solid #f0f;
+        }
+
+        :-moz-full-screen {
+            background-color: #ff0;
+            border: 1px solid #f0f;
+        }
+
+        :-ms-fullscreen {
+            background-color: #ff0;
+            border: 1px solid #f0f;
+        }
+
+        :full-screen { /*pre-spec */
+            background-color: #ff0;
+            border: 1px solid #f0f;
+        }
+
+        :fullscreen { /* spec */
+            background-color: #ff0;
+            border: 1px solid #f0f;
+        }
+
+            /* deeper elements */
+        :-webkit-full-screen video {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<video id="video" width="600" controls="">
+    <source src="http://www.w3schools.com/HTML/mov_bbb.mp4" type="video/mp4">
+    <source src="http://www.w3schools.com/HTML/mov_bbb.ogg" type="video/ogg">
+    Your browser does not support HTML5 video.
+</video>
+<button id="video_full_screen">视频全屏</button>
+<button id="page_full_screen">页面全屏</button>
+<button id="exit_full_screen">退出全屏</button>
+<script type="text/javascript">
+    (function() {
+        var video = document.getElementById('video');
+        var video_full_screen = document.getElementById('video_full_screen');
+        var page_full_screen = document.getElementById('page_full_screen');
+        var exit_full_screen = document.getElementById('exit_full_screen');
+
+        // requestFullscreen方法使得浏览器全屏。
+        var launchFullScreen = function(element) {
+            if(element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if(element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+            } else if(element.msRequestFullscreen){
+                element.msRequestFullscreen();
+            } else if(element.webkitRequestFullscreen) {
+                element.webkitRequestFullScreen();
+            }
+
+            // fullscreenElement 属性返回正处于全屏状态的网页元素。
+            log(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement);
+
+            // fullscreenEnabled 返回一个布尔值，表示是否可以全屏。
+            log(document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled);
+        };
+
+        // exitFullscreen方法用于取消全屏（带有浏览器前缀）。
+        var exitFullScreen = function() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+
+            log(document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled);
+        };
+
+        video_full_screen.addEventListener('click', function() {
+            launchFullScreen(video);
+        }, false);
+        page_full_screen.addEventListener('click', function() {
+            launchFullScreen(document.documentElement);
+        }, false);
+        exit_full_screen.addEventListener('click', function() {
+            exitFullScreen();
+        }, false);
+    })()
+</script>
+</body>
+</html>
